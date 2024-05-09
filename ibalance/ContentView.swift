@@ -13,23 +13,19 @@ struct ContentView: View {
             ZStack{
                 Color.background
                 VStack {
-                    Image("logo")
+                    ZStack {
+                        Image("logo")
+                    }.frame(width: 393, height: 153)
                     IntroPage(image: "ola",
                               firsttext: Text("Promova um uso **equilibrado de telas** \naos seus filhos."),
                               secondtext: Text("Para isso, **comece respondendo a \nseguinte questão:**"),
-                              command: "Quantos filhos você tem?")
-                    Button(action: {}, label: {
-                        ZStack {
-                            Rectangle()
-                                .foregroundStyle(.orangebalance)
-                                .frame(width: 345, height: 40)
-                                .cornerRadius(6)
-                            Text("Avançar")
-                                .foregroundStyle(.white)
-                                .font(Font.custom("Nunito-SemiBold", size: 17)
-                                    .weight(.semibold))
-                        }
-                    })
+                              command: "Quantos filhos você tem?",
+                              width: 275,
+                              padding: 35)
+                    
+                    AdvanceButton(width: 345,
+                                    text: "Avançar")
+                    Spacer()
                 }
             } .ignoresSafeArea()
         }
@@ -42,6 +38,8 @@ struct IntroPage: View {
     var firsttext: Text
     var secondtext: Text
     var command: String
+    var width: CGFloat
+    var padding: CGFloat
     
     var body: some View {
         VStack(alignment: .leading, spacing: -10){
@@ -61,8 +59,8 @@ struct IntroPage: View {
                 }
                 .font(Font.custom("Nunito-Medium", size: 16))
                 .foregroundColor(.white)
-                .frame(width: 275, height: 96, alignment: .topLeading)
-                .padding(.trailing, 20.0)
+                .frame(width: width, height: 96, alignment: .topLeading)
+                .padding(.trailing, padding)
                 .padding(.top, 4)
             }
             
@@ -71,6 +69,27 @@ struct IntroPage: View {
                 .foregroundColor(.darkbluebalance)
                 .padding(.top, 32)
         }
+    }
+}
+
+struct AdvanceButton: View {
+    
+    var width: CGFloat
+    var text: String
+    
+    var body: some View {
+        Button(action: {}, label: {
+            ZStack {
+                Rectangle()
+                    .foregroundStyle(.orangebalance)
+                    .frame(width: width, height: 40)
+                    .cornerRadius(6)
+                Text(text)
+                    .foregroundStyle(.white)
+                    .font(Font.custom("Nunito-SemiBold", size: 17)
+                        .weight(.semibold))
+            }
+        })
     }
 }
 
