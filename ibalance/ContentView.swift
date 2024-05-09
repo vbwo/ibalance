@@ -23,7 +23,7 @@ struct ContentView: View {
                               width: 275,
                               padding: 35)
                     
-                    AdvanceButton(width: 345,
+                    MainButton(width: 345,
                                     text: "Avançar")
                     Spacer()
                 }
@@ -72,7 +72,7 @@ struct IntroPage: View {
     }
 }
 
-struct AdvanceButton: View {
+struct MainButton: View {
     
     var width: CGFloat
     var text: String

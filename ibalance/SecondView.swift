@@ -29,7 +29,7 @@ struct SecondView: View {
                         
                         Spacer()
                         
-                        AdvanceButton(width: 152, text: "Avançar")
+                        MainButton(width: 152, text: "Avançar")
                     } .frame(width: 345)
                     
                     Spacer()

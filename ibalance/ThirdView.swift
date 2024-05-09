@@ -17,7 +17,7 @@ struct ThirdView: View {
                         Image("logo")
                     }.frame(width: 393, height: 172)
                     IntroPage(image: "quase",
-                              firsttext: Text("Por fim, **adicione as prioridades de uso de \ncategorias de aplicativos aos seus filhos.**"),
+                              firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo aos seus filhos.**"),
                               secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto em cada uma."),
                               command: "Prioridade por categoria de app:",
                               width: 315,
@@ -29,7 +29,7 @@ struct ThirdView: View {
                         
                         Spacer()
                         
-                        AdvanceButton(width: 152, text: "Avançar")
+                        MainButton(width: 152, text: "Avançar")
                     } .frame(width: 345)
                     
                     Spacer()
