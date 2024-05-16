@@ -8,53 +8,47 @@
 import SwiftUI
 
 struct SecondView: View {
+    
+    @Binding var screen: Int
+    @Binding var colors: [Color]
+    
     var body: some View {
-        GeometryReader{geo in
-            ZStack{
-                Color.background
-                VStack {
-                    ZStack {
-                        Image("logo")
-                    }.frame(width: 393, height: 172)
-                    IntroPage(image: "perfeito",
-                              firsttext: Text("Agora, **defina o tempo que você quer que \nseus filhos passem no celular diariamente.**"),
-                              secondtext: Text("Você pode definir tempos diferentes para \ncada dia da semana também."),
-                              command: "Tempo no celular por dia:",
-                              width: 315,
-                              padding: 0)
-                    
-                    HStack{
-                        
-                        BackButton()
-                        
-                        Spacer()
-                        
-                        MainButton(width: 152, text: "Avançar")
-                    } .frame(width: 345)
-                    
-                    Spacer()
+        GeometryReader { geo in
+            VStack {
+                ZStack {
+                    Image("logo")
                 }
-            } .ignoresSafeArea()
+                .frame(width: 393, height: 172)
+                IntroPage(
+                    image: "perfeito",
+                    firsttext: Text("Agora, **defina o tempo que você quer que \nseus filhos passem no celular diariamente.**"),
+                    secondtext: Text("Você pode definir tempos diferentes para \ncada dia da semana também."),
+                    command: "Tempo no celular por dia:",
+                    width: 315,
+                    padding: 0
+                )
+                .padding(.top, -19)
+                
+                HStack {
+                    BackButton(current: $screen,
+                               colors: $colors)
+                    Spacer()
+                    AdvanceButton(
+                        width: 152,
+                        text: "Avançar",
+                        current: $screen,
+                        colors: $colors
+                    )
+                }
+                .frame(width: 345)
+                
+                Spacer()
+            }
+            
+            .frame(height: 780)
+            .ignoresSafeArea()
+            .background(Color.background)
         }
     }
 }
 
-struct BackButton: View {
-    var body: some View {
-        Button(action: {}, label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(Color.orangebalance, lineWidth: 1)                  .frame(width: 152, height: 40)
-                
-                Text("Voltar")
-                    .foregroundStyle(.orangebalance)
-                    .font(Font.custom("Nunito-Regular", size: 17)
-                    )
-            }
-        })
-    }
-}
-
-#Preview {
-    SecondView()
-}
