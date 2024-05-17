@@ -11,7 +11,7 @@ import SwiftUI
 struct ibalanceApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(screen: .constant(2))
         }
     }
 }

@@ -7,37 +7,29 @@
 
 import SwiftUI
 
-struct FourthView: View {
+struct ResultView: View {
     
     var body: some View {
-        GeometryReader{geo in
-            ScrollView {
-                VStack {
-                    ZStack {
-                        Image("logo")
-                    }.frame(width: 393, height: 172)
-                    
-                    
-                    VStack(alignment: .leading){
-                        ResultText(text: "Resultado:",
-                                   font: "Nunito-Bold",
-                                   size: 32)
-                        .padding(.bottom, 36)
-                        
-                        ResultArea(kidText: "Filho 01",
-                                   selectionColor: .purplebalance,
-                                   textColor: .black,
-                                   day: "D",
-                                   hour: "2h",
-                                   studyTime: "1h",
-                                   gameTime: "35min",
-                                   socialTime: "25min")
-                        
-                    }
-                    
-                } .ignoresSafeArea()
-                
-            } .background(Color.background)
+        
+        VStack {
+            ResultText(text: "Resultado:",
+                       font: "Nunito-Bold",
+                       size: 32)
+            .padding(.bottom, 36)
+            .padding(.trailing, 185)
+            
+            
+            ResultArea(kidText: "Filho 01",
+                       selectionColor: .purplebalance,
+                       textColor: .black,
+                       day: "D",
+                       hour: "2h",
+                       studyTime: "1h",
+                       gameTime: "35min",
+                       socialTime: "25min")
+            
+            Spacer()
+            
         }
     }
 }
@@ -201,5 +193,5 @@ struct ResultArea: View {
 }
 
 #Preview {
-    FourthView()
+    ResultView()
 }

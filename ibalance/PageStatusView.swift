@@ -27,6 +27,10 @@ struct PageStatus: View {
                 .frame(width: 8)
                 .foregroundStyle(colors[2])
                 .animation(.easeInOut, value: current)
+            Circle()
+                .frame(width: 8)
+                .foregroundStyle(colors[3])
+                .animation(.easeInOut, value: current)
         }
         
     }

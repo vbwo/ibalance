@@ -9,42 +9,62 @@ import SwiftUI
 
 struct ThirdView: View {
     
-    @Binding var screen: Int
-    @Binding var colors: [Color]
+    @State var selection: String? = nil
+    @State var selection2: String? = nil
     
     var body: some View {
-        GeometryReader{geo in
-            VStack {
-                ZStack {
-                    Image("logo")
-                }.frame(width: 393, height: 172)
-                IntroPage(image: "quase",
-                          firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo aos seus filhos.**"),
-                          secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto em cada uma."),
-                          command: "Prioridade por categoria de app:",
-                          width: 315,
-                          padding: 0)
-                .padding(.top, -24)
+        
+        VStack {
+            
+            IntroPage(image: "quase",
+                      firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo aos seus filhos.**"),
+                      secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto em cada uma."),
+                      command: "Prioridade por categoria de app:",
+                      width: 315,
+                      padding: 0)
+            .padding(.top, -5)
+            
+            
+            HStack {
                 
-                HStack{
-                    
-                    BackButton(current: $screen,
-                               colors: $colors)
-                    
-                    Spacer()
-                    
-                    AdvanceButton(width: 152,
-                                  text: "Avançar",
-                                  current: $screen,
-                                  colors: $colors)
-                    
-                } .frame(width: 345)
+                DropdownView(selection: $selection,
+                             options: [ "Estudos",
+                                        "Jogos",
+                                        "Redes sociais"
+                                      ],
+                             menuTitle: "Categorias",
+                             menuWidth: 148
+                )
                 
                 Spacer()
-            }
-            .frame(height: 780)
-            .ignoresSafeArea()
-            .background(Color.background)
+                
+                DropdownView(selection: $selection2,
+                             options: [ "Máxima",
+                                        "Média",
+                                        "Mínima"
+                                      ],
+                             menuTitle: "Prioridade",
+                             menuWidth: 148
+                )
+                
+                Spacer()
+                
+                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                    
+                    ZStack{
+                        Circle()
+                            .frame(width: 24)
+                            .foregroundStyle(Color.orangebalance)
+                        Image(systemName: "plus")
+                            .foregroundStyle(.white)
+                    }
+                })
+                
+            } .frame(width: 345)
+            
+            Spacer()
+            
         }
+        
     }
 }
