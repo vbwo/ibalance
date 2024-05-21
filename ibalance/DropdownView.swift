@@ -8,52 +8,40 @@
 import SwiftUI
 import Combine
 
-class SharedData: ObservableObject {
-    @Published var selectedNumberOfChildren: String? = nil
-        @Published var childOptions: [String] = []
-        @Published var selectedChild: String? = nil
-    
-    func updateChildOptions() {
-        guard let selectedNumber = Int(selectedNumberOfChildren ?? "") else {
-            childOptions = []
-            return
-        }
-        childOptions = (1...selectedNumber).map { "Filho 0\($0)" }
-    }
-}
-
 enum DropDownPickerState {
     case top
     case bottom
 }
 
 struct DropdownView: View {
+    
     @Binding var selection: String?
     @State var showDropdown = false
     @SceneStorage("drop_down_zindex") private var index = 1000.0
     @State var zindex = 1000.0
+    
     var state: DropDownPickerState = .bottom
     var options: [String]
     var maxWidth: CGFloat = 180
     var menuTitle: String
     var menuWidth: CGFloat
-
+    
     var body: some View {
         GeometryReader {
             let size = $0.size
-
+            
             VStack(spacing: 0) {
                 if state == .top && showDropdown {
                     OptionsView()
                 }
-
+                
                 HStack {
                     Text(selection == nil ? menuTitle : selection!)
                         .foregroundColor(selection != nil ? Color.darkbluebalance : Color.darkbluebalance)
                         .font(Font.custom("Nunito-Regular", size: 16))
-
+                    
                     Spacer(minLength: 0)
-
+                    
                     Image(systemName: state == .top ? "chevron.up" : "chevron.down")
                         .font(.title3)
                         .foregroundColor(Color.darkbluebalance)
@@ -71,7 +59,7 @@ struct DropdownView: View {
                     }
                 }
                 .zIndex(10)
-
+                
                 if state == .bottom && showDropdown {
                     OptionsView()
                 }
@@ -84,11 +72,11 @@ struct DropdownView: View {
                     .stroke(Color.darkbluebalance)
             }
             .frame(height: size.height, alignment: state == .top ? .bottom : .top)
+            .zIndex(zindex)
         }
         .frame(width: menuWidth, height: 40)
-        .zIndex(zindex)
     }
-
+    
     func OptionsView() -> some View {
         VStack(spacing: 0) {
             ForEach(options, id: \.self) { option in

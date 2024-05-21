@@ -22,8 +22,6 @@ struct ResultView: View {
             ResultArea(kidText: "Filho 01",
                        selectionColor: .purplebalance,
                        textColor: .black,
-                       day: "D",
-                       hour: "2h",
                        studyTime: "1h",
                        gameTime: "35min",
                        socialTime: "25min")
@@ -47,44 +45,15 @@ struct ResultText: View {
     }
 }
 
-struct WeekDays: View {
-    
-    var selectionColor: Color
-    var textColor: Color
-    var day: String
-    var hour: String
-    
-    var body: some View {
-        VStack {
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                ZStack{
-                    Circle()
-                        .frame(width: 24)
-                        .foregroundStyle(selectionColor)
-                    Text("\(day)")
-                        .foregroundStyle(textColor)
-                        .font(Font.custom("Nunito-Regular",
-                                          size: 12))
-                }
-            })
-            Text("\(hour)")
-                .foregroundStyle(selectionColor)
-                .font(Font.custom("Nunito-Regular",
-                                  size: 12))
-        }
-    }
-}
-
 struct ResultArea: View {
     
     var kidText: String
     var selectionColor: Color
     var textColor: Color
-    var day: String
-    var hour: String
     var studyTime: String
     var gameTime: String
     var socialTime: String
+    @State private var selectedDayIndex: Int? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -96,34 +65,20 @@ struct ResultArea: View {
                 
                 Spacer()
                 
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
-                WeekDays(selectionColor: selectionColor,
-                         textColor: textColor,
-                         day: "\(day)",
-                         hour: "\(hour)")
+                ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"].indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
+                    Button(action: {
+                        selectedDayIndex = index
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .frame(width: 24)
+                                .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
+                            Text(day)
+                                .foregroundStyle(selectedDayIndex == index ? .white : .black)
+                                .font(Font.custom("Nunito-Regular", size: 12))
+                        }
+                    })
+                }
             } .frame(width: 338)
             
             Image("tempo")

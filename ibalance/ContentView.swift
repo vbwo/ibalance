@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  ibalance
-//
-//  Created by Vitória Beltrão Wenceslau do Ó on 08/05/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -14,9 +7,11 @@ struct ContentView: View {
     @Binding var screen: Int
     @EnvironmentObject var sharedData: SharedData
     
+    var children: [Child] = []
+    
     var body: some View {
         VStack {
-            GeometryReader{geo in
+            GeometryReader { geo in
                 VStack {
                     
                     Image("logo")
@@ -26,12 +21,16 @@ struct ContentView: View {
                     TabView(selection: $current) {
                         FirstView()
                             .tag(0)
+                            .environmentObject(self.sharedData)
                         SecondView()
                             .tag(1)
+                            .environmentObject(self.sharedData)
                         ThirdView()
                             .tag(2)
+                            .environmentObject(self.sharedData)
                         ResultView()
                             .tag(3)
+                            .environmentObject(self.sharedData)
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .indexViewStyle(.page(backgroundDisplayMode: .never))
@@ -53,14 +52,16 @@ struct ContentView: View {
                                               text: "Avançar",
                                               current: $current,
                                               colors: $colors)
-                            } .frame(width: 345)
-                        }  else if current == 3 {
+                            }
+                            .frame(width: 345)
+                        } else if current == 3 {
                             ConcludeButton(current: $current,
                                            colors: $colors,
                                            width: 345,
                                            text: "Concluir")
                         }
                     }
+    
                 }
                 .frame(height: 780)
                 .ignoresSafeArea()
@@ -68,7 +69,7 @@ struct ContentView: View {
             }
             PageStatus(current: $current, colors: $colors)
         }
-        .environmentObject(sharedData)
+        
     }
 }
 

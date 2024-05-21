@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ibalanceApp: App {
+    
+    @StateObject private var sharedData = SharedData()
+    
     var body: some Scene {
         WindowGroup {
             ContentView(screen: .constant(2))
+                .environmentObject(sharedData)
         }
     }
 }

@@ -14,6 +14,7 @@ struct AdvanceButton: View {
     @Binding var current: Int
     @Binding var colors: [Color]
     
+    
     var body: some View {
         Button(action: {
             
