@@ -10,11 +10,10 @@ import SwiftUI
 struct SecondView: View {
     
     @EnvironmentObject var sharedData: SharedData
-    @State private var selectedDayIndex: Int = 0
     @State var childrenIndex: Int = 0
-    
-    @State var hours: [Int] = [0,0,0,0,0,0,0]
-    @State var minutes: [Int] = [0,0,0,0,0,0,0]
+    @State private var selectedDayIndex: Int = 0
+    @State var hours: [Int] = [0, 0, 0, 0, 0, 0, 0]
+    @State var minutes: [Int] = [0, 0, 0, 0, 0, 0, 0]
     
     var body: some View {
         VStack {
@@ -36,8 +35,8 @@ struct SecondView: View {
                         menuWidth: 114
                     )
                     .zIndex(1)
-                    .onChange(of: sharedData.selectedChild) { newValue in
-                        childrenIndex = (Int(newValue?.suffix(1) ?? "1") ?? 1) - 1
+                    .onChange(of: sharedData.selectedChild) {
+                        childrenIndex = (Int(sharedData.selectedChild?.suffix(1) ?? "1") ?? 1) - 1
                     }
                     
                     Spacer()
@@ -69,7 +68,7 @@ struct SecondView: View {
                     }
                 }
                 .pickerStyle(WheelPickerStyle())
-                .frame(width: 100)
+                .frame(width: 150)
                 
                 Picker(selection: $minutes[selectedDayIndex], label: Text("Minutos")) {
                     ForEach(0..<60) { minute in
@@ -77,14 +76,15 @@ struct SecondView: View {
                     }
                 }
                 .pickerStyle(WheelPickerStyle())
-                .frame(width: 100)
+                .frame(width: 150)
             }
             .frame(height: 150)
+            .padding(.top, 20)
             
             Button(action: {
-                let totalMinutes = hours[selectedDayIndex] * 60 + minutes[selectedDayIndex]
-                let date = Calendar.current.date(bySettingHour: totalMinutes / 60, minute: totalMinutes % 60, second: 0, of: Date())!
-                sharedData.children[childrenIndex].weekDays?[selectedDayIndex].hours = date
+                let hoursText = "\(hours[selectedDayIndex])h"
+                let minutesText = "\(minutes[selectedDayIndex])min"
+                sharedData.timeForDays[childrenIndex][selectedDayIndex] = "\(hoursText) \(minutesText)"
             }, label: {
                 ZStack {
                     Rectangle()
@@ -107,4 +107,3 @@ struct SecondView: View {
 #Preview {
     SecondView().environmentObject(SharedData())
 }
-

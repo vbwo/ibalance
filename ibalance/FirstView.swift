@@ -12,7 +12,7 @@ struct FirstView: View {
     @EnvironmentObject var sharedData: SharedData
     
     var body: some View {
-        NavigationStack {
+       
             VStack {
                 IntroPage(
                     image: "ola",
@@ -31,7 +31,7 @@ struct FirstView: View {
                     menuWidth: 105
                 )
                 .padding(.trailing, 236)
-                .onChange(of: sharedData.selectedNumberOfChildren) { _ in
+                .onChange(of: sharedData.selectedNumberOfChildren) { oldState, newState in
                     sharedData.updateChildOptions()
                     let amount = Int(sharedData.selectedNumberOfChildren ?? "0") ?? 0
                     sharedData.createNewElement(amount: amount)
@@ -39,7 +39,7 @@ struct FirstView: View {
                 
                 Spacer()
             }
-        }
+        
     }
 }
 

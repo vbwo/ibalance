@@ -14,11 +14,13 @@ class SharedData: ObservableObject {
     @Published var childOptions: [String] = []
     @Published var selectedChild: String? = nil
     @Published var children: [Child] = []
+    @Published var timeForDays: [[String]] = []
     
     func createNewElement(amount: Int) {
         if amount == 0 { return }
         
         children = []
+        timeForDays = Array(repeating: Array(repeating: "0h 0min", count: 7), count: amount)
         
         for _ in 1...amount {
             let newElement = Child()
@@ -38,3 +40,4 @@ class SharedData: ObservableObject {
         }
     }
 }
+

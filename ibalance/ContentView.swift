@@ -7,6 +7,9 @@ struct ContentView: View {
     @Binding var screen: Int
     @EnvironmentObject var sharedData: SharedData
     
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
     var children: [Child] = []
     
     var body: some View {
@@ -42,7 +45,10 @@ struct ContentView: View {
                             AdvanceButton(width: 345,
                                           text: "Avançar",
                                           current: $current,
-                                          colors: $colors)
+                                          colors: $colors,
+                                          selection: $sharedData.selectedNumberOfChildren,
+                                          showAlert: $showAlert,
+                                          alertMessage: $alertMessage)
                         } else if current == 1 || current == 2 {
                             HStack {
                                 BackButton(current: $current,
@@ -51,7 +57,10 @@ struct ContentView: View {
                                 AdvanceButton(width: 152,
                                               text: "Avançar",
                                               current: $current,
-                                              colors: $colors)
+                                              colors: $colors,
+                                              selection: $sharedData.selectedNumberOfChildren,
+                                              showAlert: $showAlert,
+                                              alertMessage: $alertMessage)
                             }
                             .frame(width: 345)
                         } else if current == 3 {
@@ -59,9 +68,9 @@ struct ContentView: View {
                                            colors: $colors,
                                            width: 345,
                                            text: "Concluir")
-                        }
+                        } 
                     }
-    
+                    
                 }
                 .frame(height: 780)
                 .ignoresSafeArea()
@@ -69,7 +78,9 @@ struct ContentView: View {
             }
             PageStatus(current: $current, colors: $colors)
         }
-        
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Atenção"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
     }
 }
 

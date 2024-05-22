@@ -37,23 +37,31 @@ struct ThirdView: View {
                     Spacer()
                     
                     ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"].indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
-                        Button(action: {
-                            selectedDayIndex = index
-                        }, label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 24)
-                                    .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
-                                Text(day)
-                                    .foregroundStyle(selectedDayIndex == index ? .white : .black)
-                                    .font(Font.custom("Nunito-Regular", size: 12))
-                            }
-                        })
+                        VStack {
+                            Button(action: {
+                                selectedDayIndex = index
+                            }, label: {
+                                ZStack {
+                                    Circle()
+                                        .frame(width: 24)
+                                        .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
+                                    Text(day)
+                                        .foregroundStyle(selectedDayIndex == index ? .white : .black)
+                                        .font(Font.custom("Nunito-Regular", size: 12))
+                                }
+                            })
+                            
+                            Text(sharedData.timeForDays[(Int(sharedData.selectedChild?.suffix(1) ?? "1") ?? 1) - 1][index])
+                                .font(Font.custom("Nunito-Regular", size: 10))
+                                .foregroundStyle(Color.purplebalance)
+                                .multilineTextAlignment(.center)
+                        }
                     }
                 }
                 .frame(width: 345)
                 .padding(.bottom, 20)
-            } .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
+            }
+            .zIndex(1.0)
             
             HStack {
                 
