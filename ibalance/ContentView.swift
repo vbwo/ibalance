@@ -62,7 +62,7 @@ struct ContentView: View {
                                            colors: $colors)
                                 Spacer()
                                 AdvanceButton(width: 152,
-                                              text: "Avançar",
+                                              text: "Calcular",
                                               current: $current,
                                               colors: $colors,
                                               showAlert: $showAlert,
