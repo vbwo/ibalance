@@ -5,12 +5,11 @@ struct ContentView: View {
     @State var current: Int = 0
     @State var colors: [Color] = [.purplebalance, .lightpurplebalance, .lightpurplebalance, .lightpurplebalance]
     @Binding var screen: Int
-    @EnvironmentObject var sharedData: SharedData
-    
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State var hours: [Int] = [0, 0, 0, 0, 0, 0, 0]
+    @State var minutes: [Int] = [0, 0, 0, 0, 0, 0, 0]
     
-    var children: [Child] = []
     
     var body: some View {
         VStack {
@@ -22,22 +21,16 @@ struct ContentView: View {
                         .padding(.bottom, 40)
                     
                     TabView(selection: $current) {
-                        FirstView()
+                        FirstView(hours: $hours, minutes: $minutes)
                             .tag(0)
-                            .environmentObject(self.sharedData)
-                        SecondView()
+                        SecondView(hours: $hours, minutes: $minutes)
                             .tag(1)
-                            .environmentObject(self.sharedData)
-                        ThirdView()
-                            .tag(2)
-                            .environmentObject(self.sharedData)
                         ResultView()
-                            .tag(3)
-                            .environmentObject(self.sharedData)
+                            .tag(2)
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .indexViewStyle(.page(backgroundDisplayMode: .never))
-                    
+                     
                     Spacer()
                     
                     HStack {
@@ -46,10 +39,12 @@ struct ContentView: View {
                                           text: "Avançar",
                                           current: $current,
                                           colors: $colors,
-                                          selection: $sharedData.selectedNumberOfChildren,
                                           showAlert: $showAlert,
-                                          alertMessage: $alertMessage)
-                        } else if current == 1 || current == 2 {
+                                          alertMessage: $alertMessage,
+                                          hours: $hours,
+                                          minutes: $minutes,
+                                          checkHoursAndMinutes: true)
+                        } else if current == 1 {
                             HStack {
                                 BackButton(current: $current,
                                            colors: $colors)
@@ -58,17 +53,19 @@ struct ContentView: View {
                                               text: "Avançar",
                                               current: $current,
                                               colors: $colors,
-                                              selection: $sharedData.selectedNumberOfChildren,
                                               showAlert: $showAlert,
-                                              alertMessage: $alertMessage)
+                                              alertMessage: $alertMessage,
+                                              hours: $hours,
+                                              minutes: $minutes,
+                                              checkHoursAndMinutes: false)
                             }
                             .frame(width: 345)
-                        } else if current == 3 {
+                        } else if current == 2 {
                             ConcludeButton(current: $current,
                                            colors: $colors,
                                            width: 345,
                                            text: "Concluir")
-                        } 
+                        }
                     }
                     
                 }
@@ -79,11 +76,20 @@ struct ContentView: View {
             PageStatus(current: $current, colors: $colors)
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Atenção"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Atenção"),
+                message: Text(alertMessage),
+                primaryButton: .default(Text("Sim")) {
+                    colors[current] = .lightpurplebalance
+                    colors[current + 1] = .purplebalance
+                    current += 1
+                },
+                secondaryButton: .cancel(Text("Não"))
+            )
         }
     }
 }
 
 #Preview {
-    ContentView(screen: .constant(2)).environmentObject(SharedData())
+    ContentView(screen: .constant(2))
 }

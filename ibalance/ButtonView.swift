@@ -8,26 +8,30 @@
 import SwiftUI
 
 struct AdvanceButton: View {
-    
     var width: CGFloat
     var text: String
-    @State private var selectedDayIndex: Int = 0
-    @State var hours: [Int] = [0, 0, 0, 0, 0, 0, 0]
-    @State var minutes: [Int] = [0, 0, 0, 0, 0, 0, 0]
     @Binding var current: Int
     @Binding var colors: [Color]
-    @Binding var selection: String?
-    @Binding var showAlert: Bool  
+    @Binding var showAlert: Bool
     @Binding var alertMessage: String
-    
+    @Binding var hours: [Int]
+    @Binding var minutes: [Int]
+    var checkHoursAndMinutes: Bool = false
+
     var body: some View {
         Button(action: {
-            
             withAnimation {
                 if current <= 3 {
-                    if selection == nil {
-                        alertMessage = "Selecione uma quantidade para continuar."
-                        showAlert = true
+                    if checkHoursAndMinutes {
+                        let hasZeroHoursAndMinutes = zip(hours, minutes).contains { $0 == 0 && $1 == 0 }
+                        if hasZeroHoursAndMinutes {
+                            alertMessage = "Você tem pelo menos um dia da semana com \"0h00min\". Deseja avançar mesmo assim?"
+                            showAlert = true
+                        } else {
+                            colors[current] = .lightpurplebalance
+                            colors[current + 1] = .purplebalance
+                            current += 1
+                        }
                     } else {
                         colors[current] = .lightpurplebalance
                         colors[current + 1] = .purplebalance
@@ -36,7 +40,7 @@ struct AdvanceButton: View {
                 }
             }
         },
-               label: {
+        label: {
             ZStack {
                 Rectangle()
                     .foregroundStyle(.orangebalance)
@@ -58,18 +62,15 @@ struct BackButton: View {
     
     var body: some View {
         Button(action: {
-            
-            withAnimation{
-                
+            withAnimation {
                 if current <= 3 {
                     colors[current] = .lightpurplebalance
                     colors[current - 1] = .purplebalance
                     current -= 1
                 }
-                
             }
         },
-               label: {
+        label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(Color.orangebalance, lineWidth: 1)
@@ -92,17 +93,13 @@ struct ConcludeButton: View {
     var text: String
     
     var body: some View {
-        
         Button(action: {
-            
             current = 0
-            
             for i in 0..<colors.count {
                 colors[i] = i == 0 ? .purplebalance : .lightpurplebalance
-                
             }
         },
-               label: {
+        label: {
             ZStack {
                 Rectangle()
                     .foregroundStyle(.orangebalance)
@@ -114,6 +111,5 @@ struct ConcludeButton: View {
                         .weight(.semibold))
             }
         })
-        
     }
 }

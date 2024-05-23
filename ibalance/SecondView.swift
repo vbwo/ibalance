@@ -9,101 +9,156 @@ import SwiftUI
 
 struct SecondView: View {
     
-    @EnvironmentObject var sharedData: SharedData
-    @State var childrenIndex: Int = 0
     @State private var selectedDayIndex: Int = 0
-    @State var hours: [Int] = [0, 0, 0, 0, 0, 0, 0]
-    @State var minutes: [Int] = [0, 0, 0, 0, 0, 0, 0]
+    @State private var selectedOptions: [[String?]] = Array(repeating: [nil, nil, nil], count: 7)
+    @State private var showAlert = false
+    @State private var duplicatedOption: String? = nil
+    @Binding var hours: [Int]
+    @Binding var minutes: [Int]
     
     var body: some View {
         VStack {
             VStack {
-                IntroPage(
-                    image: "perfeito",
-                    firsttext: Text("Agora, **defina o tempo que você quer que \nseus filhos passem no celular diariamente.**"),
-                    secondtext: Text("Você pode definir tempos diferentes para \ncada dia da semana também."),
-                    command: "Tempo no celular por dia:",
-                    width: 315,
-                    padding: 0
-                )
-                
-                HStack {
-                    DropdownView(
-                        selection: $sharedData.selectedChild,
-                        options: sharedData.childOptions,
-                        menuTitle: "Filho 01",
-                        menuWidth: 114
-                    )
-                    .zIndex(1)
-                    .onChange(of: sharedData.selectedChild) {
-                        childrenIndex = (Int(sharedData.selectedChild?.suffix(1) ?? "1") ?? 1) - 1
-                    }
-                    
-                    Spacer()
-                    
-                    ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"]
-                        .indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
-                        Button(action: {
-                            selectedDayIndex = index
-                        }, label: {
-                            ZStack {
-                                Circle()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
-                                Text(day)
-                                    .foregroundStyle(selectedDayIndex == index ? .white : .black)
-                                    .font(Font.custom("Nunito-Regular", size: 12))
-                            }
-                        })
-                    }
-                }
+                IntroPage(image: "perfeito",
+                          firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo.**"),
+                          secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto pelo seu filho em cada uma."),
+                          command: "Prioridade por categoria de app:",
+                          width: 315,
+                          padding: 0)
+                    .padding(.top, -5)
+            } .zIndex(2)
+            .frame(width: 345)
+            .padding(.bottom, 20)
+            
+            DaysAndHoursView(selectedDayIndex: $selectedDayIndex, hours: $hours, minutes: $minutes)
+            
+            Divider()
                 .frame(width: 345)
-            }
-            .zIndex(1)
+                .padding(.top, 16)
             
             HStack {
-                Picker(selection: $hours[selectedDayIndex], label: Text("Horas")) {
-                    ForEach(0..<24) { hour in
-                        Text("\(hour)h").tag(hour)
-                    }
+                VStack {
+                    Text("Estudos")
+                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .foregroundStyle(Color.darkbluebalance)
+                    DropdownView(selection: $selectedOptions[selectedDayIndex][0],
+                                 options: ["Máxima", "Média", "Mínima"],
+                                 menuTitle: "Opção",
+                                 menuWidth: 110,
+                                 selectedOptions: $selectedOptions[selectedDayIndex],
+                                 optionIndex: 0
+                    )
                 }
-                .pickerStyle(WheelPickerStyle())
-                .frame(width: 150)
                 
-                Picker(selection: $minutes[selectedDayIndex], label: Text("Minutos")) {
-                    ForEach(0..<60) { minute in
-                        Text("\(minute)min").tag(minute)
-                    }
+                Spacer()
+                
+                VStack {
+                    Text("Jogos")
+                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .foregroundStyle(Color.darkbluebalance)
+                    DropdownView(selection: $selectedOptions[selectedDayIndex][1],
+                                 options: ["Máxima", "Média", "Mínima"],
+                                 menuTitle: "Opção",
+                                 menuWidth: 110,
+                                 selectedOptions: $selectedOptions[selectedDayIndex],
+                                 optionIndex: 1
+                    )
                 }
-                .pickerStyle(WheelPickerStyle())
-                .frame(width: 150)
+                
+                Spacer()
+                
+                VStack {
+                    Text("Redes")
+                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .foregroundStyle(Color.darkbluebalance)
+                    DropdownView(selection: $selectedOptions[selectedDayIndex][2],
+                                 options: ["Máxima", "Média", "Mínima"],
+                                 menuTitle: "Opção",
+                                 menuWidth: 110,
+                                 selectedOptions: $selectedOptions[selectedDayIndex],
+                                 optionIndex: 2
+                    )
+                }
             }
-            .frame(height: 150)
-            .padding(.top, 20)
-            
-            Button(action: {
-                let hoursText = "\(hours[selectedDayIndex])h"
-                let minutesText = "\(minutes[selectedDayIndex])min"
-                sharedData.timeForDays[childrenIndex][selectedDayIndex] = "\(hoursText) \(minutesText)"
-            }, label: {
-                ZStack {
-                    Rectangle()
-                        .foregroundStyle(.orangebalance)
-                        .frame(width: 80, height: 40)
-                        .cornerRadius(6)
-                    Text("Definir")
-                        .foregroundStyle(.white)
-                        .font(Font.custom("Nunito-SemiBold", size: 17)
-                            .weight(.semibold))
-                }.padding(.leading, 200)
-            })
+            .frame(width: 345)
+            .padding(.top, 10)
             
             Spacer()
         }
-        .environmentObject(sharedData)
+        .onChange(of: selectedOptions) { 
+            checkForDuplicates()
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Atenção"),
+                message: Text("A prioridade não pode ser repetida."),
+                dismissButton: .default(Text("OK")) {
+                    if let duplicatedOption = duplicatedOption {
+                        if let lastIndex = selectedOptions[selectedDayIndex].lastIndex(of: duplicatedOption) {
+                            selectedOptions[selectedDayIndex][lastIndex] = nil
+                        }
+                    }
+                    duplicatedOption = nil
+                }
+            )
+        }
+    }
+    
+    private func checkForDuplicates() {
+        var foundDuplicates = false
+        var duplicateOption: String?
+        
+        for option in selectedOptions[selectedDayIndex] {
+            guard let option = option else { continue }
+            
+            if selectedOptions[selectedDayIndex].filter({ $0 == option }).count > 1 {
+                foundDuplicates = true
+                duplicateOption = option
+                break
+            }
+        }
+        
+        showAlert = foundDuplicates
+        duplicatedOption = duplicateOption
     }
 }
 
-#Preview {
-    SecondView().environmentObject(SharedData())
+struct SecondView_Previews: PreviewProvider {
+    static var previews: some View {
+        SecondView(hours: .constant([0, 1, 2, 3, 4, 5, 6]), minutes: .constant([0, 10, 20, 30, 40, 50, 60]))
+    }
+}
+
+struct DaysAndHoursView: View {
+    
+    @Binding var selectedDayIndex: Int
+    @Binding var hours: [Int]
+    @Binding var minutes: [Int]
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"].indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
+                VStack {
+                    Button(action: {
+                        selectedDayIndex = index
+                    }) {
+                        ZStack {
+                            Circle()
+                                .frame(width: 26, height: 26)
+                                .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
+                            Text(day)
+                                .foregroundStyle(selectedDayIndex == index ? .white : .black)
+                                .font(Font.custom("Nunito-Regular", size: 14))
+                        }
+                    }
+                    Text("\(hours[index])h\n\(minutes[index])min")
+                        .font(Font.custom("Nunito-Regular", size: 9))
+                        .foregroundStyle(Color.darkpurplebalance)
+                        .multilineTextAlignment(.center)
+                }
+            }
+        }
+        .frame(width: 345)
+        .padding(.top, 10)
+    }
 }

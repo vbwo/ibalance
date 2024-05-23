@@ -26,6 +26,9 @@ struct DropdownView: View {
     var menuTitle: String
     var menuWidth: CGFloat
     
+    @Binding var selectedOptions: [String?]
+    var optionIndex: Int
+    
     var body: some View {
         GeometryReader {
             let size = $0.size
@@ -93,6 +96,7 @@ struct DropdownView: View {
                 .onTapGesture {
                     withAnimation(.snappy) {
                         selection = option
+                        selectedOptions[optionIndex] = option // Update the corresponding option in the array
                         showDropdown.toggle()
                     }
                 }
