@@ -95,7 +95,7 @@ struct SecondView: View {
                         }
                     }
                 }, label: {
-                    Text("Clique para aplicar aos outros dias.")
+                    Text("Aperte para aplicar aos outros dias.")
                         .font(Font.custom("Nunito-Medium",
                                           size: 16))
                         .foregroundStyle(Color.darkbluebalance)
