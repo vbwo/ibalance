@@ -10,25 +10,25 @@ import SwiftUI
 struct SecondView: View {
     
     @State private var selectedDayIndex: Int = 0
-    @State private var selectedOptions: [[String?]] = Array(repeating: [nil, nil, nil], count: 7)
+    @Binding var selectedOptions: [[String?]]
     @State private var showAlert = false
     @State private var duplicatedOption: String? = nil
     @Binding var hours: [Int]
     @Binding var minutes: [Int]
+    private var allDropdownsSelected: Bool {
+        return selectedOptions.allSatisfy { $0.allSatisfy { $0 != nil } }
+    }
+    
     
     var body: some View {
         VStack {
-            VStack {
-                IntroPage(image: "perfeito",
-                          firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo.**"),
-                          secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto pelo seu filho em cada uma."),
-                          command: "Prioridade por categoria de app:",
-                          width: 315,
-                          padding: 0)
-                    .padding(.top, -5)
-            } .zIndex(2)
-            .frame(width: 345)
-            .padding(.bottom, 20)
+            
+            IntroPage(image: "quase",
+                      firsttext: Text("Por fim, **adicione as prioridades de cada \ncategoria de aplicativo.**"),
+                      secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto pelo seu filho em cada uma."),
+                      command: "Prioridade por categoria de app:",
+                      width: 315,
+                      padding: 0)
             
             DaysAndHoursView(selectedDayIndex: $selectedDayIndex, hours: $hours, minutes: $minutes)
             
@@ -39,7 +39,7 @@ struct SecondView: View {
             HStack {
                 VStack {
                     Text("Estudos")
-                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .font(Font.custom("Nunito-SemiBold", size: 16))
                         .foregroundStyle(Color.darkbluebalance)
                     DropdownView(selection: $selectedOptions[selectedDayIndex][0],
                                  options: ["Máxima", "Média", "Mínima"],
@@ -54,7 +54,7 @@ struct SecondView: View {
                 
                 VStack {
                     Text("Jogos")
-                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .font(Font.custom("Nunito-SemiBold", size: 16))
                         .foregroundStyle(Color.darkbluebalance)
                     DropdownView(selection: $selectedOptions[selectedDayIndex][1],
                                  options: ["Máxima", "Média", "Mínima"],
@@ -69,7 +69,7 @@ struct SecondView: View {
                 
                 VStack {
                     Text("Redes")
-                        .font(Font.custom("Nunito-Medium", size: 16))
+                        .font(Font.custom("Nunito-SemiBold", size: 16))
                         .foregroundStyle(Color.darkbluebalance)
                     DropdownView(selection: $selectedOptions[selectedDayIndex][2],
                                  options: ["Máxima", "Média", "Mínima"],
@@ -79,29 +79,52 @@ struct SecondView: View {
                                  optionIndex: 2
                     )
                 }
-            }
-            .frame(width: 345)
-            .padding(.top, 10)
+                
+            } .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/)
+                .frame(width: 345)
+                .padding(.top, 10)
             
-            Spacer()
-        }
-        .onChange(of: selectedOptions) { 
-            checkForDuplicates()
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Atenção"),
-                message: Text("A prioridade não pode ser repetida."),
-                dismissButton: .default(Text("OK")) {
-                    if let duplicatedOption = duplicatedOption {
-                        if let lastIndex = selectedOptions[selectedDayIndex].lastIndex(of: duplicatedOption) {
-                            selectedOptions[selectedDayIndex][lastIndex] = nil
+            if showButton {
+                Button(action: {
+                    for (i, row) in selectedOptions.enumerated() {
+                        for (j, _) in row.enumerated() {
+                            if (i == 0) {
+                                continue
+                            }
+                            selectedOptions[i][j] = selectedOptions[0][j]
                         }
                     }
-                    duplicatedOption = nil
-                }
-            )
-        }
+                }, label: {
+                    Text("Clique para aplicar aos outros dias.")
+                        .font(Font.custom("Nunito-Medium",
+                                          size: 16))
+                        .foregroundStyle(Color.darkbluebalance)
+                        .underline(true, color: .darkbluebalance)
+                        .padding(.top, 6)
+                })}
+            
+            Spacer()
+            
+        } .background(Color.background.opacity(0.01))
+            .highPriorityGesture(DragGesture())
+            .onChange(of: selectedOptions) {
+                checkForDuplicates()
+            }
+        
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Atenção"),
+                    message: Text("A prioridade não pode ser repetida."),
+                    dismissButton: .default(Text("OK")) {
+                        if let duplicatedOption = duplicatedOption {
+                            if let lastIndex = selectedOptions[selectedDayIndex].lastIndex(of: duplicatedOption) {
+                                selectedOptions[selectedDayIndex][lastIndex] = nil
+                            }
+                        }
+                        duplicatedOption = nil
+                    }
+                )
+            }
     }
     
     private func checkForDuplicates() {
@@ -121,12 +144,11 @@ struct SecondView: View {
         showAlert = foundDuplicates
         duplicatedOption = duplicateOption
     }
-}
-
-struct SecondView_Previews: PreviewProvider {
-    static var previews: some View {
-        SecondView(hours: .constant([0, 1, 2, 3, 4, 5, 6]), minutes: .constant([0, 10, 20, 30, 40, 50, 60]))
+    
+    private var showButton: Bool {
+        return selectedDayIndex == 0 && selectedOptions[0][0] != nil && selectedOptions[0][1] != nil && selectedOptions[0][2] != nil
     }
+    
 }
 
 struct DaysAndHoursView: View {
@@ -137,7 +159,8 @@ struct DaysAndHoursView: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"].indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
+            ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"].indices,
+                              ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
                 VStack {
                     Button(action: {
                         selectedDayIndex = index
@@ -152,7 +175,7 @@ struct DaysAndHoursView: View {
                         }
                     }
                     Text("\(hours[index])h\n\(minutes[index])min")
-                        .font(Font.custom("Nunito-Regular", size: 9))
+                        .font(Font.custom("Nunito-Regular", size: 12))
                         .foregroundStyle(Color.darkpurplebalance)
                         .multilineTextAlignment(.center)
                 }

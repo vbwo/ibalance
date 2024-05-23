@@ -72,8 +72,9 @@ struct FirstView: View {
                 .padding(.top, -10)
             }
             .padding(.top, -375)
-        }
-        .frame(width: 345)
+        }  .frame(width: 345)
+            .background(Color.background.opacity(0.01))
+            .highPriorityGesture(DragGesture())
         Spacer()
     }
 }
@@ -92,19 +93,19 @@ struct DaysView: View {
         HStack(spacing: 16) {
             ForEach(Array(zip(["D", "S", "T", "Q", "Q", "S", "S"]
                 .indices, ["D", "S", "T", "Q", "Q", "S", "S"])), id: \.0) { index, day in
-                Button(action: {
-                    selectedDayIndex = index
-                }, label: {
-                    ZStack {
-                        Circle()
-                            .frame(width: 26, height: 26)
-                            .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
-                        Text(day)
-                            .foregroundStyle(selectedDayIndex == index ? .white : .black)
-                            .font(Font.custom("Nunito-Regular", size: 14))
-                    }
-                })
-            }
+                    Button(action: {
+                        selectedDayIndex = index
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .frame(width: 26, height: 26)
+                                .foregroundStyle(selectedDayIndex == index ? .purplebalance : .lightpurplebalance)
+                            Text(day)
+                                .foregroundStyle(selectedDayIndex == index ? .white : .black)
+                                .font(Font.custom("Nunito-Regular", size: 14))
+                        }
+                    })
+                }
         }
         .frame(width: 345)
         .padding(.top, 10)

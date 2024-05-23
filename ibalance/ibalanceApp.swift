@@ -9,10 +9,12 @@ import SwiftUI
 
 @main
 struct ibalanceApp: App {
+    @State private var selectedDayIndex = 0
     
     var body: some Scene {
         WindowGroup {
-            ContentView(screen: .constant(2))
+            ContentView(screen: .constant(2), selectedDayIndex: $selectedDayIndex)
         }
     }
 }
+

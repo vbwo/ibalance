@@ -96,7 +96,7 @@ struct DropdownView: View {
                 .onTapGesture {
                     withAnimation(.snappy) {
                         selection = option
-                        selectedOptions[optionIndex] = option // Update the corresponding option in the array
+                        selectedOptions[optionIndex] = option
                         showDropdown.toggle()
                     }
                 }
