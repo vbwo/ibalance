@@ -28,7 +28,8 @@ struct SecondView: View {
                       secondtext: Text("Assim, podemos calcular o tempo a ser\ngasto pelo seu filho em cada uma."),
                       command: "Prioridade por categoria de app:",
                       width: 315,
-                      padding: 0)
+                      padding: 0, 
+                      padtop: 4)
             
             DaysAndHoursView(selectedDayIndex: $selectedDayIndex, hours: $hours, minutes: $minutes)
             

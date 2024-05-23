@@ -19,11 +19,12 @@ struct ResultView: View {
         VStack {
             
             IntroPage(image: "perfeito",
-                      firsttext: Text("Pronto! **Seu calculo está concluído.**"),
-                      secondtext: Text("Confira abaixo o resultado \nde acordo com os tempos que selecionou por dia. "),
+                      firsttext: Text("Pronto, **seu cálculo está concluído!**"),
+                      secondtext: Text("Confira abaixo o resultado de acordo \ncom os tempos que selecionou por dia. "),
                       command: "Resultado:",
                       width: 315,
-                      padding: 0)
+                      padding: 0, 
+                      padtop: 24)
             
             DaysAndHoursView(selectedDayIndex: $selectedDayIndex, hours: $hours, minutes: $minutes)
             

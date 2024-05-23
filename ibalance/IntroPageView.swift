@@ -15,6 +15,7 @@ struct IntroPage: View {
     var command: String
     var width: CGFloat
     var padding: CGFloat
+    var padtop: CGFloat
     
     var body: some View {
         VStack(alignment: .leading, spacing: -10){
@@ -36,7 +37,7 @@ struct IntroPage: View {
                 .foregroundColor(.white)
                 .frame(width: width, height: 96, alignment: .topLeading)
                 .padding(.trailing, padding)
-                .padding(.top, 4)
+                .padding(.top, padtop)
             }
             
             Text(command)

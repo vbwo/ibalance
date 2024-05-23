@@ -21,7 +21,8 @@ struct FirstView: View {
                 secondtext: Text("Comece definindo o **tempo que ele \npassará no celular a cada dia.**"),
                 command: "Escolha o tempo para cada dia:",
                 width: 315,
-                padding: 0
+                padding: 0,
+                padtop: 4
             )
             .zIndex(4)
             
